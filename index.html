@@ -33,10 +33,10 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-  min-height:100vh;display:flex;justify-content:center;align-items:center;
+  min-height:100vh;min-height:100dvh;display:flex;justify-content:center;align-items:center;
   background:radial-gradient(ellipse at 50% 28%,var(--bg-start) 0%,var(--bg-end) 100%);
   color:var(--text);transition:background .5s,color .4s;
-  user-select:none;-webkit-user-select:none;overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;
 }
 body::after{
   content:"";position:fixed;inset:0;opacity:var(--noise-opacity);
@@ -54,7 +54,7 @@ canvas.grabbing{cursor:ns-resizebing}
 canvas.grab-hint{cursor:ns-resize}
 .bpm-section{display:flex;flex-direction:column;align-items:center;gap:1px}
 .bpm-value{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;
-  font-size:4.5rem;font-weight:200;letter-spacing:-.04em;line-height:1;
+  font-size:4.5rem;font-weight:200;touch-action:manipulation;letter-spacing:-.04em;line-height:1;
   color:var(--text);font-variant-numeric:tabular-nums;transition:color .4s,transform .2s;
   cursor:pointer;
 }
@@ -63,7 +63,7 @@ canvas.grab-hint{cursor:ns-resize}
 
 /* Inline TS stepper */
 .ts-row{display:flex;align-items:center;gap:6px}
-.ts-num{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;font-size:1.05rem;font-weight:500;color:var(--text);padding:4px 8px;border-radius:8px;transition:all .2s;font-variant-numeric:tabular-nums}
+.ts-num{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;font-size:1.05rem;touch-action:manipulation;font-weight:500;color:var(--text);padding:4px 8px;border-radius:8px;transition:all .2s;font-variant-numeric:tabular-nums}
 .ts-num .lz{opacity:0;transition:opacity .15s}
 .ts-num .lz.visible{opacity:1}
 .ts-num:hover{transform:translateY(-2px)}
@@ -378,7 +378,7 @@ bpmValue.addEventListener("mousedown",function(e){
   bpmDragY=e.clientY;bpmDragStart=state.bpm;bpmDragging=true;e.preventDefault();
 });
 bpmValue.addEventListener("touchstart",function(e){
-  bpmDragY=e.touches[0].clientY;bpmDragStart=state.bpm;bpmDragging=true;
+  e.preventDefault();bpmDragY=e.touches[0].clientY;bpmDragStart=state.bpm;bpmDragging=true;
 },{passive:false});
 window.addEventListener("mousemove",function(e){
   if(!bpmDragging)return;
@@ -400,7 +400,7 @@ window.addEventListener("mouseup",function(){if(bpmDragging){bpmDragging=false;b
 window.addEventListener("touchend",function(){if(bpmDragging){bpmDragging=false;bpmValue.classList.remove("bpm-dragging");bpmValue.style.transform="";bpmValue.textContent=state.bpm}});
 
 // ===== BPM CLICK =====
-bpmValue.addEventListener("click",function(e){if(bpmDragging||Math.abs(state.bpm-bpmDragStart)>1)return;if(state.playing)stopPlayback();else{state.angle=state.swingDirection*.01;startPlayback()}});
+bpmValue.addEventListener("click",function(e){if(bpmDragging||Math.abs(state.bpm-bpmDragStart)>3)return;if(state.playing)stopPlayback();else{state.angle=state.swingDirection*.01;startPlayback()}});
 
 // ===== WHEEL =====
 function onWheel(e){if(state.playing)return;
