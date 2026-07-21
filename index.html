@@ -133,6 +133,7 @@ var state={
   beatFlash:0,firstBeatTime:0,lastBeatTime:0,idlePhase:0
 };
 
+var isMobile="ontouchstart"in window||navigator.maxTouchPoints>0;
 var trail=[],MAX_TRAIL=26;
 var weightCanvasX=0,weightCanvasY=0;
 var pivotCanvasX=0,pivotCanvasY=0,rodLenGlobal=0;
@@ -364,8 +365,8 @@ tsDenBtn.addEventListener("touchstart",function(e){tsDragStart(e,tsDenBtn)},{pas
 
 function updateTsLock(){if(state.playing){tsNumBtn.classList.add("locked");tsDenBtn.classList.add("locked")}else{tsNumBtn.classList.remove("locked");tsDenBtn.classList.remove("locked")}}
 function updateTSDisplay(){var n=state.beatsPerMeasure;var d=state.tsDenominator;tsNumBtn.innerHTML=(n<10?"<span class='lz'>0</span>":"<span class='lz visible'>"+Math.floor(n/10)+"</span>")+n%10;tsDenBtn.innerHTML=d+(d<10?"<span class='lz'>0</span>":"")}
-function changeNum(delta){if(state.playing)return;var n=state.beatsPerMeasure+delta;if(n<1)n=1;if(n>16)n=16;state.beatsPerMeasure=n;while(state.accentPattern.length<n)state.accentPattern.push(0);state.accentPattern.length=n;beatInterval=calcBeatInterval();updateTSDisplay();renderAccentDots()}
-function changeDen(delta){if(state.playing)return;var d=state.tsDenominator+delta;if(d<1)d=1;if(d>16)d=16;state.tsDenominator=d;beatInterval=calcBeatInterval();updateTSDisplay()}
+function changeNum(delta){if(state.playing)return;var n=state.beatsPerMeasure+delta;if(isMobile){if(n<1)n=16;if(n>16)n=1}else{if(n<1)n=1;if(n>16)n=16}state.beatsPerMeasure=n;while(state.accentPattern.length<n)state.accentPattern.push(0);state.accentPattern.length=n;beatInterval=calcBeatInterval();updateTSDisplay();renderAccentDots()}
+function changeDen(delta){if(state.playing)return;var d=state.tsDenominator+delta;if(isMobile){if(d<1)d=16;if(d>16)d=1}else{if(d<1)d=1;if(d>16)d=16}state.tsDenominator=d;beatInterval=calcBeatInterval();updateTSDisplay()}
 tsNumBtn.addEventListener("wheel",function(e){e.preventDefault();changeNum(e.deltaY>0?-1:1)},{passive:false});
 tsDenBtn.addEventListener("wheel",function(e){e.preventDefault();changeDen(e.deltaY>0?-1:1)},{passive:false});
 
@@ -378,7 +379,7 @@ bpmValue.addEventListener("mousedown",function(e){
   bpmDragY=e.clientY;bpmDragStart=state.bpm;bpmDragging=true;e.preventDefault();
 });
 bpmValue.addEventListener("touchstart",function(e){
-  e.preventDefault();bpmDragY=e.touches[0].clientY;bpmDragStart=state.bpm;bpmDragging=true;
+  bpmDragY=e.touches[0].clientY;bpmDragStart=state.bpm;bpmDragging=true;
 },{passive:false});
 window.addEventListener("mousemove",function(e){
   if(!bpmDragging)return;
