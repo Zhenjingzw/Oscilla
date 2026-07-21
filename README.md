@@ -1,6 +1,6 @@
 # Oscilla
 
-A minimalist pendulum metronome with Dark Side of the Moon aesthetics.
+A minimalist pendulum metronome.
 
 ## Controls
 
