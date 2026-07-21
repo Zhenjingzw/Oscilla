@@ -161,7 +161,7 @@ function scheduleClick(level,time){
 
 // ===== SCHEDULER =====
 var nextBeatTime=0,beatInterval=.5,schedulerRAF=null,scheduleBeatIndex=0;
-function calcBeatInterval(){return (60/state.bpm)*(4/state.tsDenominator)}
+function calcBeatInterval(){return 60/state.bpm}
 function scheduleBeats(){
   if(!state.playing)return;
   var now=audioCtx?audioCtx.currentTime:performance.now()/1000;
